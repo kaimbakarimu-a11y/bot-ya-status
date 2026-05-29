@@ -2,23 +2,23 @@ import makeWASocket, { useMultiFileAuthState, DisconnectReason } from '@whiskeys
 import pino from 'pino';
 
 async function startBot() {
-    const { state, saveCreds } = await useMultiFileAuthState('auth_info_baileys');
+    // Tumebadilisha jina la folder kuwa 'session_bot_mpya' ili kuanza upya
+    const { state, saveCreds } = await useMultiFileAuthState('session_bot_mpya');
 
     const sock = makeWASocket({
         logger: pino({ level: 'silent' }), 
         auth: state,
-        // Tunazima QR code ili tutumie Pairing Code
         printQRInTerminal: false 
     });
 
-    // Sehemu ya Pairing Code
+    // Subiri sekunde 5 ili bot iwe tayari kabla ya kuomba Pairing Code
+    await new Promise(resolve => setTimeout(resolve, 5000));
+
     if (!sock.authState.creds.registered) {
-        const phoneNumber = "255689121383"; // Namba yako
+        const phoneNumber = "255689121383"; 
         const code = await sock.requestPairingCode(phoneNumber);
         console.log(`\n================================`);
-        console.log(`BONYEZA LINK DEVICE KWENYE WHATSAPP`);
-        console.log(`CHAGUA "LINK WITH PHONE NUMBER"`);
-        console.log(`INGIZA CODE HII: ${code}`);
+        console.log(`INGIZA CODE HII KWENYE WHATSAPP: ${code}`);
         console.log(`================================\n`);
     }
 
@@ -30,7 +30,7 @@ async function startBot() {
             console.log('Muunganisho umekatika. Kujaribu kuunganisha tena...');
             if (shouldReconnect) startBot(); 
         } else if (connection === 'open') {
-            console.log('\n🎉 Bot imefanikiwa kuunganishwa na ipo tayari kazi! 🎉');
+            console.log('\n🎉 Bot imefanikiwa kuunganishwa! 🎉');
         }
     });
 
