@@ -1,8 +1,14 @@
-import makeWASocket, { useMultiFileAuthState, DisconnectReason } from '@whiskeysockets/baileys';
+import { makeWASocket, useMultiFileAuthState, DisconnectReason } from '@whiskeysockets/baileys';
 import pino from 'pino';
+import express from 'express';
+
+const app = express();
+const port = process.env.PORT || 3000;
+
+app.get('/', (req, res) => res.send('Bot inaendelea kufanya kazi!'));
+app.listen(port, () => console.log(`Server iko hai kwenye port ${port}`));
 
 async function startBot() {
-    // Tumebadilisha jina la folder kuwa 'session_bot_mpya' ili kuanza upya
     const { state, saveCreds } = await useMultiFileAuthState('session_bot_mpya');
 
     const sock = makeWASocket({
@@ -11,7 +17,6 @@ async function startBot() {
         printQRInTerminal: false 
     });
 
-    // Subiri sekunde 5 ili bot iwe tayari kabla ya kuomba Pairing Code
     await new Promise(resolve => setTimeout(resolve, 5000));
 
     if (!sock.authState.creds.registered) {
