@@ -1,0 +1,5 @@
+services:
+  - type: web
+    name: whatsapp-bot
+    env: docker
+    plan: free
